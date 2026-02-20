@@ -1,0 +1,98 @@
+/* Container Layout */
+.login__container {
+  display: grid;
+  align-items: center;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 3rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  margin: auto;
+}
+
+/* Swiper Styling & Masking */
+.login__swiper {
+  display: none; /* Mobile Hidden */
+  position: relative;
+  overflow: hidden;
+  border-radius: 2.5rem;
+  /* Applying your mask.svg file */
+  -webkit-mask-image: url('./mask.svg');
+  mask-image: url('./mask.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+
+.login__swiper-img {
+  width: 100%;
+  height: 650px;
+  object-fit: cover;
+}
+
+.login__swiper-data {
+  position: absolute;
+  top: 4rem;
+  left: 3rem;
+  z-index: 10;
+  color: #fff;
+}
+
+.login__swiper-title {
+  font-family: "Unbounded", sans-serif;
+  font-size: 1.75rem;
+}
+
+/* Form Elements */
+.login__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login__input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  outline: none;
+  transition: border 0.4s;
+}
+
+.login__input:focus {
+  border-color: #1a1a1a;
+}
+
+.login__box i {
+  position: absolute;
+  right: 1.25rem;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+}
+
+.login__eye {
+  cursor: pointer;
+  z-index: 10;
+}
+
+.login__button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f04438;
+  color: #fff;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+/* Desktop Responsive */
+@media screen and (min-width: 1150px) {
+  .login__container {
+    grid-template-columns: 600px 340px;
+    column-gap: 5rem;
+    width: 1110px;
+  }
+  .login__swiper {
+    display: block;
+  }
+}
