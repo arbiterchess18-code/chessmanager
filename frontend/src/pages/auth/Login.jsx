@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 
@@ -15,9 +15,33 @@ import img3 from "./images3.jpeg";
 import "./Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
   const togglePassword = () => setIsPasswordShown(!isPasswordShown);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    // Bypass Logic
+    if (email === "arbiterchess18@gmail.com" && password === "12345678") {
+      const userData = {
+        firstName: "Arbiter",
+        lastName: "Admin",
+        email: email,
+        role: "arbiter"
+      };
+      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("authToken", "demo-token"); // Simulating login
+      window.dispatchEvent(new Event("authChange"));
+      navigate("/");
+    } else {
+      alert("Invalid credentials. Try: arbiterchess18@gmail.com / 12345678");
+    }
+  };
 
   return (
     <div className="login container grid">
@@ -64,10 +88,11 @@ const Login = () => {
 
           <span className="login__line">or</span>
 
-          <form className="login__form">
+          <form className="login__form" onSubmit={handleSubmit}>
             <div className="login__content grid">
               <div className="login__box">
                 <input
+                  name="email"
                   type="email"
                   placeholder="Email"
                   className="login__input"
@@ -78,6 +103,7 @@ const Login = () => {
 
               <div className="login__box">
                 <input
+                  name="password"
                   type={isPasswordShown ? "text" : "password"}
                   placeholder="Password"
                   className="login__input"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 
@@ -8,19 +8,41 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-// Assets (Use i1, i2, i3)
-import i1 from "./i1.jpeg";
-import i2 from "./i2.jpeg";
-import i3 from "./i3.jpeg";
+// Assets (Use images1, images2, images3)
+import i1 from "./images1.jpeg";
+import i2 from "./images2.jpeg";
+import i3 from "./images3.jpeg";
 
 import "./Login.css"; // Same CSS file
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isConfirmShown, setIsConfirmShown] = useState(false);
+  const [role, setRole] = useState("player"); // "player" or "arbiter"
 
   const togglePassword = () => setIsPasswordShown(!isPasswordShown);
   const toggleConfirm = () => setIsConfirmShown(!isConfirmShown);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    // Save to localStorage
+    const userData = {
+      firstName: data.firstName || "",
+      lastName: data.lastName || "",
+      email: data.email || "",
+      role: role
+    };
+
+    localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem("authToken", "demo-token"); // Simulating login
+    window.dispatchEvent(new Event("authChange"));
+
+    navigate("/");
+  };
 
   return (
     <div className="login container grid">
@@ -58,7 +80,29 @@ const Signup = () => {
         <div className="login__area grid">
           <div className="login__data">
             <h1 className="login__title">Create Account 🚀</h1>
-            <p className="login__description">Please fill your details.</p>
+            <p className="login__description">Enter Your Details</p>
+
+            {/* Role Toggle */}
+            <div className="login__toggle">
+              <button
+                type="button"
+                className={`login__toggle-btn ${role === 'player' ? 'active' : ''}`}
+                onClick={() => setRole('player')}
+              >
+                Player
+              </button>
+              <button
+                type="button"
+                className={`login__toggle-btn ${role === 'arbiter' ? 'active' : ''}`}
+                onClick={() => setRole('arbiter')}
+              >
+                Arbiter
+              </button>
+              <div
+                className="login__toggle-slider"
+                style={{ transform: role === 'arbiter' ? 'translateX(100%)' : 'translateX(0)' }}
+              ></div>
+            </div>
 
             <button className="login__button-border">
               <i className="ri-apple-fill"></i> Sign up with Apple
@@ -67,13 +111,26 @@ const Signup = () => {
 
           <span className="login__line">or</span>
 
-          <form className="login__form">
+          <form className="login__form" onSubmit={handleSubmit}>
             <div className="login__content grid">
-              {/* Full Name */}
+              {/* First Name */}
               <div className="login__box">
                 <input
+                  name="firstName"
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="First Name"
+                  className="login__input"
+                  required
+                />
+                <i className="ri-user-line"></i>
+              </div>
+
+              {/* Last Name */}
+              <div className="login__box">
+                <input
+                  name="lastName"
+                  type="text"
+                  placeholder="Last Name"
                   className="login__input"
                   required
                 />
@@ -83,6 +140,7 @@ const Signup = () => {
               {/* Email */}
               <div className="login__box">
                 <input
+                  name="email"
                   type="email"
                   placeholder="Email"
                   className="login__input"
@@ -94,11 +152,13 @@ const Signup = () => {
               {/* Password */}
               <div className="login__box">
                 <input
+                  name="password"
                   type={isPasswordShown ? "text" : "password"}
                   placeholder="Password"
                   className="login__input"
                   required
                 />
+
                 <i
                   className={
                     isPasswordShown
